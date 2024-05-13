@@ -62,13 +62,13 @@ class Log(models.Model):
     status_of_last_attempt = models.BooleanField(verbose_name='Статус попытки', blank=True,
                                                  null=True)
 
-    clients_list = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Клиенты для рассылки', blank=True,
+    clients_list = models.ManyToManyField(Client, verbose_name='Клиенты для рассылки', blank=True,
                                      null=True)
-    mailing_list = models.ForeignKey(Newsletter, on_delete=models.CASCADE, verbose_name='Письма для рассылки',
+    mailing_list = models.ManyToManyField(Newsletter, verbose_name='Письма для рассылки',
                                      blank=True,
                                      null=True)
 
-    server_response = models.CharField(verbose_name='ответ почтового сервера', blank=True, null=True)
+    server_response = models.CharField(verbose_name='Ответ почтового сервера', max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f" {self.status_of_last_attempt} {self.clients_list} {self.mailing_list} {self.server_response} {self.time_attempt}"
