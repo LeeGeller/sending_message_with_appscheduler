@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'schedule',
+    'django_apscheduler',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -77,7 +81,7 @@ prv = PrivateConfig("private.json")
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": prv.get("DATABASE", "NAME"),
+        "NAME": "schedule",
         "USER": prv.get("DATABASE", "USER"),
         "PASSWORD": prv.get("DATABASE", "PASSWORD"),
         "HOST": prv.get("DATABASE", "HOST"),
@@ -146,3 +150,5 @@ EMAIL_USE_SSL = True
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTH_USER_MODEL = 'users.User'
