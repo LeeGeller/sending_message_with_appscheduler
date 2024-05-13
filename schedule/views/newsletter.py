@@ -27,13 +27,18 @@ class NewsletterCreateView(CreateView):
         for client in selected_clients:
             newsletter.clients.add(client)
 
-        Log.objects.create(
-            time_attempt=timezone.now(), status_of_last_attempt=False,
-            clients_list=selected_clients, mailing_list=newsletter.message,
-            server_response='OK'
-        )
+        current_datetime = timezone.now()
 
-        # Возвращаем успешный ответ
+        # Создаем список клиентов для рассылки
+        clients_list = list(selected_clients)
+
+        # Создаем запись лога для всех клиентов
+        Log.objects.create(
+            time_attempt=current_datetime,
+            status_of_last_attempt=False,
+            server_response='OK',
+        ).clients_list.set(clients_list)
+
         return super().form_valid(form)
 
 
