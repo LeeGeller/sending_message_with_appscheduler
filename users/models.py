@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(AbstractUser):
+class Users(AbstractUser):
     username = None
     email = models.EmailField(
         max_length=50, verbose_name="Email", help_text="Введите свой email", unique=True
