@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "bootstrap_datepicker_plus",
+    "django_cron",
 
     'schedule',
     'users',
@@ -165,3 +166,7 @@ if CACHE_ENABLED:
     }
 
 AUTH_USER_MODEL = 'users.User'
+
+CRON_CLASSES = [
+    "my_app.cron.MyCronJob",
+]
