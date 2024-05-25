@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "bootstrap_datepicker_plus",
-    "django_cron",
+    'django_crontab',
 
     'schedule',
     'users',
@@ -167,6 +167,8 @@ if CACHE_ENABLED:
 
 AUTH_USER_MODEL = 'users.User'
 
-CRON_CLASSES = [
-    "my_app.cron.MyCronJob",
+CRONJOBS = [
+    ('*/1 * * * *', 'schedule.utils.get_print',
+     '>> /home/kris/sky_projects/sending_message_with_appscheduler-main/schedule/schedule_job_logcron.log'),
 ]
+CRONTAB_COMMAND_PREFIX = 'source /home/kris/sky_projects/sending_message_with_appscheduler-main/venv/bin/activate &&'
