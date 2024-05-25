@@ -1,10 +1,9 @@
-from django.utils import timezone
-
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from schedule.forms import NewsletterForm
-from schedule.models import Newsletter, Log
+from schedule.models import Newsletter
+from schedule.services import send_mailing
 
 
 class NewsletterListView(ListView):
@@ -21,23 +20,15 @@ class NewsletterCreateView(CreateView):
         newsletter = form.save(commit=False)
 
         selected_clients = form.cleaned_data.get('clients')
-        newsletter.save()
+
         newsletter.clients.clear()
 
         for client in selected_clients:
             newsletter.clients.add(client)
 
-        current_datetime = timezone.now()
+        newsletter.save()
 
-        # Создаем список клиентов для рассылки
-        clients_list = list(selected_clients)
-
-        # Создаем запись лога для всех клиентов
-        Log.objects.create(
-            time_attempt=current_datetime,
-            status_of_last_attempt=False,
-            server_response='OK',
-        ).clients_list.set(clients_list)
+        send_mailing(newsletter)
 
         return super().form_valid(form)
 
@@ -53,23 +44,15 @@ class NewsletterUpdateView(UpdateView):
         newsletter = form.save(commit=False)
 
         selected_clients = form.cleaned_data.get('clients')
-        newsletter.save()
+
         newsletter.clients.clear()
 
         for client in selected_clients:
             newsletter.clients.add(client)
 
-        current_datetime = timezone.now()
+        newsletter.save()
 
-        # Создаем список клиентов для рассылки
-        clients_list = list(selected_clients)
-
-        # Создаем запись лога для всех клиентов
-        Log.objects.create(
-            time_attempt=current_datetime,
-            status_of_last_attempt=False,
-            server_response='OK',
-        ).clients_list.set(clients_list)
+        send_mailing(newsletter)
 
         return super().form_valid(form)
 
