@@ -1,21 +1,21 @@
-
-
 from django.db import models
 
 CREATE = 'Создана'
 STARTED = 'Отправлено'
 DONE = 'Завершена'
+ERROR = 'Ошибка отправки'
 
 DAILY = 'раз в день'
 WEEKLY = 'раз в неделю'
 MONTHLY = 'раз в месяц'
 
-FREQUENCY_CHOICES = [('Ежедневно', DAILY), ('Еженедельно', WEEKLY), ('Ежемесячно', MONTHLY), ]
-STATUS_OF_NEWSLETTER = [("Создать", CREATE), ("Запустить", STARTED), ("Завершить", DONE), ]
+FREQUENCY_CHOICES = [(DAILY, 'Ежедневно'), (WEEKLY, 'Еженедельно'), (MONTHLY, 'Ежемесячно'), ]
+STATUS_OF_NEWSLETTER = [(CREATE, 'Создана'), (STARTED, "Запущена"), (DONE, "Завершена"), (ERROR, 'Ошибка отправки')]
 
 
 class Client(models.Model):
-    contact_email = models.CharField(max_length=200, verbose_name='контактный email')
+    contact_email = models.EmailField(
+        max_length=50, verbose_name="Email", help_text="Введите свой email", unique=True)
     fullname = models.TextField(verbose_name='фио')
     comment = models.CharField(max_length=250, verbose_name='комментарий')
 
@@ -30,6 +30,8 @@ class Client(models.Model):
 class TextForNewsletter(models.Model):
     subject = models.CharField(max_length=200, verbose_name='тема')
     text = models.TextField(verbose_name='текст')
+    clients = models.ManyToManyField(Client, verbose_name='Клиенты для рассылки',
+                                     blank=True)
 
     def __str__(self):
         return f"{self.subject} {self.text}"
@@ -46,7 +48,7 @@ class Newsletter(models.Model):
     status_of_newsletter = models.CharField(max_length=150, verbose_name='статус рассылки',
                                             choices=STATUS_OF_NEWSLETTER)
     clients = models.ManyToManyField(Client, verbose_name='Клиенты')
-    message = models.ForeignKey(TextForNewsletter, on_delete=models.CASCADE, verbose_name='Сообщение для отправки')
+    message = models.ManyToManyField(TextForNewsletter, verbose_name='Сообщение для отправки')
 
     def __str__(self):
         return f"{self.start_time} {self.end_time} {self.frequency} {self.status_of_newsletter} {self.clients} {self.message}"
@@ -57,23 +59,19 @@ class Newsletter(models.Model):
 
 
 class Log(models.Model):
-    time_attempt = models.DateTimeField(verbose_name='дата и время последней попытки', auto_now_add=True, blank=True,
-                                        null=True)
-    status_of_last_attempt = models.BooleanField(verbose_name='Статус попытки', blank=True,
-                                                 null=True)
-
-    clients_list = models.ManyToManyField(Client, verbose_name='Клиенты для рассылки', blank=True,
-                                     null=True)
-    mailing_list = models.ManyToManyField(Newsletter, verbose_name='Письма для рассылки',
-                                     blank=True,
-                                     null=True)
-
-    server_response = models.CharField(verbose_name='Ответ почтового сервера', max_length=255, blank=True, null=True)
+    time_attempt = models.DateTimeField(verbose_name='дата и время последней попытки', auto_now_add=True, null=True,
+                                        blank=True)
+    status_of_last_attempt = models.BooleanField(verbose_name='Статус попытки', null=True, blank=True)
+    client = models.ForeignKey(Client, verbose_name='Клиент', on_delete=models.CASCADE, null=True, blank=True)
+    message = models.ForeignKey(TextForNewsletter, verbose_name='Сообщение', on_delete=models.CASCADE, null=True,
+                                blank=True)
+    mailing_list = models.ForeignKey(Newsletter, verbose_name='Рассылка', on_delete=models.CASCADE, null=True,
+                                     blank=True)
+    server_response = models.CharField(verbose_name='Ответ почтового сервера', max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f" {self.status_of_last_attempt} {self.clients_list} {self.mailing_list} {self.server_response} {self.time_attempt}"
+        return f"Попытка отправки для {self.client} по рассылке {self.mailing_list}"
 
     class Meta:
-        verbose_name = "Лог"
-        verbose_name_plural = "Логи"
-
+        verbose_name = "Лог отправки сообщения"
+        verbose_name_plural = "Логи отправки сообщений"
