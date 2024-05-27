@@ -10,7 +10,7 @@ class Client(admin.ModelAdmin):
 
 @admin.register(TextForNewsletter)
 class TextForNewsletter(admin.ModelAdmin):
-    list_display = ('pk', 'subject', 'text',)
+    list_display = ('pk', 'subject', 'text', )
 
 
 @admin.register(Newsletter)
