@@ -145,6 +145,7 @@ STATICFILES_DIRS = (BASE_DIR / "static",)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = Path(BASE_DIR, "media")
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.yandex.ru"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
@@ -168,7 +169,7 @@ if CACHE_ENABLED:
 AUTH_USER_MODEL = 'users.User'
 
 CRONJOBS = [
-    ('*/1 * * * *', 'schedule.utils.get_print',
+    ('*/1 * * * *', 'schedule.crontab.do',
      '>> /home/kris/sky_projects/sending_message_with_appscheduler-main/schedule/schedule_job_logcron.log'),
 ]
 CRONTAB_COMMAND_PREFIX = 'source /home/kris/sky_projects/sending_message_with_appscheduler-main/venv/bin/activate &&'
