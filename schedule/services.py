@@ -5,45 +5,47 @@ import pytz
 from django.conf import settings
 from django.core.mail import send_mail
 
-from schedule.models import Log, DONE
+from schedule.models import Log, DONE, ERROR
 
 
 def send_mailing(mailing):
     zone = pytz.timezone(settings.TIME_ZONE)
     current_datetime = datetime.now(zone)
+    current_time_formatted = current_datetime.strftime("%Y-%m-%d %H:%M:%S%z")
+    time_obj = datetime.strptime(current_time_formatted, "%Y-%m-%d %H:%M:%S%z")
 
-    # создание объекта с применением фильтра
-    if mailing.start_time <= current_datetime <= mailing.end_time:
-        for message in mailing.message:
+    # Проверяем, должна ли рассылка выполняться в данный момент времени
+    if mailing.start_time >= time_obj <= mailing.end_time:
+        try:
             for client in mailing.clients.all():
-                try:
+                for post in mailing.message.all():
                     result = send_mail(
-                        subject=message.subject,
-                        message=message.text,
+                        subject=post.subject,
+                        message=post.text,
                         from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[client.email],
+                        recipient_list=[client.contact_email],
                         fail_silently=False
                     )
+                    # Создаем объект Log для записи в журнал
                     log = Log.objects.create(
-                        time_attempt=mailing.start_time,
-                        status_of_last_attempt=result,
-                        server_response='OK',
+                        time_attempt=current_datetime,
+                        status_of_last_attempt=bool(result),
+                        server_response='OK' if result else 'Error',
                         mailing_list=mailing,
-                        clients_list=client
+                        client=client,
                     )
                     log.save()
 
-                    return log
-                except SMTPException as error:
-                    log = Log.objects.create(
-                        time_attempt=mailing.start_time,
-                        status_of_last_attempt=False,
-                        server_response=error,
-                        mailing_list=mailing,
-                        clients_list=client
-                    )
-                    log.save()
-                return log
-            else:
-                mailing.status_of_newsletter = DONE
-                mailing.save()
+        except SMTPException as error:
+            # Если произошла ошибка при отправке, создаем объект Log с соответствующими данными
+            log = Log.objects.create(
+                time_attempt=current_datetime,
+                status_of_last_attempt=False,
+                server_response=str(error),
+                mailing_list=mailing,
+            )
+            log.save()
+        mailing.status_of_newsletter = DONE
+    if mailing.status_of_newsletter != DONE:
+        mailing.status_of_newsletter = ERROR
+    mailing.save()
