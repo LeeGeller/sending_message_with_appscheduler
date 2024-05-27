@@ -1,7 +1,7 @@
-from bootstrap_datepicker_plus.widgets import DatePickerInput
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 
-from schedule.models import Newsletter
+from schedule.models import Newsletter, Client, TextForNewsletter
 
 
 class MixinForms(forms.ModelForm):
@@ -12,10 +12,11 @@ class MixinForms(forms.ModelForm):
 
 
 class NewsletterForm(MixinForms):
+
     class Meta:
         model = Newsletter
         fields = ['start_time', 'end_time', 'frequency', 'clients', 'message']
         widgets = {
-            'start_time': DatePickerInput(),
-            'end_time': DatePickerInput(),
+            'start_time': DateTimePickerInput(),
+            'end_time': DateTimePickerInput(),
         }
