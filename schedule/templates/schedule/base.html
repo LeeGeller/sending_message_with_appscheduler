@@ -19,10 +19,13 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:log_list' %}">Статусы</a>
     </nav>
+    <div class="col">
+        <div class="col float-end">
+            {% get_users_menu %}
+        </div>
+    </div>
 </div>
-<div class="col float-end">
-    {% get_users_menu %}
-</div>
+
 {% block content %}
 {% endblock %}
 </div>
