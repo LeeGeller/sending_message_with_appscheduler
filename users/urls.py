@@ -4,6 +4,7 @@ from django.urls import path
 
 from config import settings
 from users.apps import UserConfig
+from users.services import email_verification
 from users.views import UserCreateView, PasswortResetView
 
 app_name = UserConfig.name
