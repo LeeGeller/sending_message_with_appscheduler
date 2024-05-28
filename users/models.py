@@ -10,6 +10,8 @@ class User(AbstractUser):
         max_length=50, verbose_name="Email", help_text="Введите свой email", unique=True
     )
     company = models.CharField(max_length=200, verbose_name="", null=True)
+    token = models.CharField(max_length=200, verbose_name="Token", blank=True, null=True)
+    is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
