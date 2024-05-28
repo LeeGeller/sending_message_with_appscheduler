@@ -1,10 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import ListView
 
 from schedule.models import Log
 
 
-class LogListView(ListView):
+class LogListView(LoginRequiredMixin, ListView):
     model = Log
 
     def get_success_url(self):

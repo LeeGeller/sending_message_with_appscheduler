@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
@@ -6,14 +7,13 @@ from schedule.models import Newsletter, CREATE
 from schedule.services import send_mailing
 import logging
 
-logger = logging.getLogger(__name__)
 
 
-class NewsletterListView(ListView):
+class NewsletterListView(LoginRequiredMixin, ListView):
     model = Newsletter
 
 
-class NewsletterCreateView(CreateView):
+class NewsletterCreateView(LoginRequiredMixin, CreateView):
     model = Newsletter
     form_class = NewsletterForm
 
@@ -39,7 +39,7 @@ class NewsletterCreateView(CreateView):
         return super().form_valid(form)
 
 
-class NewsletterUpdateView(UpdateView):
+class NewsletterUpdateView(LoginRequiredMixin, UpdateView):
     model = Newsletter
     form_class = NewsletterForm
 
@@ -64,15 +64,12 @@ class NewsletterUpdateView(UpdateView):
 
         newsletter.save()
 
-        logger.debug(f"Newsletter status: {newsletter.status_of_newsletter}")
-        logger.debug(f"Newsletter start time: {newsletter.start_time}")
-
         send_mailing(newsletter)
 
         return super().form_valid(form)
 
 
-class NewsletterDeleteView(DeleteView):
+class NewsletterDeleteView(LoginRequiredMixin, DeleteView):
     model = Newsletter
 
     def get_success_url(self):
