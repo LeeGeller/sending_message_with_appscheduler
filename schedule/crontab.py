@@ -10,7 +10,7 @@ def do():
     from schedule.task_for_mailing import create_daily_task, create_weekly_task, create_monthly_task
     zone = pytz.timezone(settings.TIME_ZONE)
     current_datetime = datetime.now(zone)
-    # # Код, который будет выполнен при запуске
+    # Код, который будет выполнен при запуске
     create_daily_task()
     create_weekly_task()
     create_monthly_task()

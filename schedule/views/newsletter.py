@@ -4,6 +4,9 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from schedule.forms import NewsletterForm
 from schedule.models import Newsletter, CREATE
 from schedule.services import send_mailing
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class NewsletterListView(ListView):
@@ -60,6 +63,9 @@ class NewsletterUpdateView(UpdateView):
         newsletter.start_time = selected_start_time
 
         newsletter.save()
+
+        logger.debug(f"Newsletter status: {newsletter.status_of_newsletter}")
+        logger.debug(f"Newsletter start time: {newsletter.start_time}")
 
         send_mailing(newsletter)
 
