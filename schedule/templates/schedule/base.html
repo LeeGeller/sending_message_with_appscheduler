@@ -1,4 +1,5 @@
 {% load static %}
+{% load menu_items %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,6 +19,9 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:log_list' %}">Статусы</a>
     </nav>
+</div>
+<div class="col float-end">
+    {% get_users_menu %}
 </div>
 {% block content %}
 {% endblock %}
