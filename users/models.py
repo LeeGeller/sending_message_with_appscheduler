@@ -9,6 +9,7 @@ class User(AbstractUser):
     email = models.EmailField(
         max_length=50, verbose_name="Email", help_text="Введите свой email", unique=True
     )
+    company = models.CharField(max_length=200, verbose_name="", null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
