@@ -12,6 +12,7 @@ class User(AbstractUser):
     company = models.CharField(max_length=200, verbose_name="", null=True)
     token = models.CharField(max_length=200, verbose_name="Token", blank=True, null=True)
     is_active = models.BooleanField(default=False)
+    avatar = models.ImageField(verbose_name='Аватар', upload_to='users/', blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
