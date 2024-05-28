@@ -1,4 +1,4 @@
-{% extends 'catalog/base.html' %}
+{% extends 'schedule/base.html' %}
 {% load my_tags %}
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-1 pb-md-2 mx-auto text-center">
@@ -6,7 +6,7 @@
 </div>
 <main>
     <div class="album py-5 bg-body-tertiary">
-        <form method="post" enctype="multipart/form-data" action="{% url 'users:login' %}">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="container">
                 <div class="row justify-content-center">
@@ -22,7 +22,7 @@
                                 <a class="btn btn-primary btn-sm" href="{% url 'schedule:log_list' %}">
                                     Отменить
                                 </a>
-                                <a href="{% url 'users:password_reset' %}" class="btn btn-link btn-sm">
+                                <a href="{% url 'users:passwort_reset' %}" class="btn btn-link btn-sm">
                                     Восстановить пароль
                                 </a>
                             </div>
@@ -33,5 +33,4 @@
         </form>
     </div>
 </main>
-
 {% endblock %}

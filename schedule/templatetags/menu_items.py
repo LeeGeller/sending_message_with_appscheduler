@@ -13,6 +13,6 @@ def get_users_menu(context):
     else:
         users_menu = [
             {"id": 1, "name": "Войти", "template": "users:login"},
-            {"id": 2, "name": "Регистрация", "template": "users:register"},
+            {"id": 2, "name": "Регистрация", "template": "users:registration"},
         ]
     return {"users_menu": users_menu}

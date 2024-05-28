@@ -4,16 +4,22 @@ from django.urls import path
 
 from config import settings
 from users.apps import UserConfig
+from users.form import CustomPasswordResetForm
 from users.services import email_verification
 from users.views import UserCreateView, PasswortResetView
 
 app_name = UserConfig.name
 
+
 urlpatterns = [
-    path('login/', LoginView.as_view(template_name="login.html"), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('registration/', UserCreateView.as_view(), name='registration'),
-    path('passwort_reset_view/', PasswortResetView.as_view(), name='passwort_reset'),
+    path("login/", LoginView.as_view(template_name="login.html"), name="login"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("registration/", UserCreateView.as_view(), name="registration"),
+    path(
+        "passwort_reset_view/",
+        PasswortResetView.as_view(form_class=CustomPasswordResetForm),
+        name="passwort_reset",
+    ),
     path(
         "confirm-register/<str:token>/",
         email_verification,
