@@ -1,37 +1,64 @@
 from django.db import models
 
-CREATE = 'Создана'
-STARTED = 'Отправлено'
-DONE = 'Завершена'
-ERROR = 'Ошибка отправки'
+from users.models import Company
 
-DAILY = 'раз в день'
-WEEKLY = 'раз в неделю'
-MONTHLY = 'раз в месяц'
+CREATE = "Создана"
+STARTED = "Отправлено"
+DONE = "Завершена"
+ERROR = "Ошибка отправки"
 
-FREQUENCY_CHOICES = [(DAILY, 'Ежедневно'), (WEEKLY, 'Еженедельно'), (MONTHLY, 'Ежемесячно'), ]
-STATUS_OF_NEWSLETTER = [(CREATE, 'Создана'), (STARTED, "Запущена"), (DONE, "Завершена"), (ERROR, 'Ошибка отправки')]
+DAILY = "раз в день"
+WEEKLY = "раз в неделю"
+MONTHLY = "раз в месяц"
+
+FREQUENCY_CHOICES = [
+    (DAILY, "Ежедневно"),
+    (WEEKLY, "Еженедельно"),
+    (MONTHLY, "Ежемесячно"),
+]
+STATUS_OF_NEWSLETTER = [
+    (CREATE, "Создана"),
+    (STARTED, "Запущена"),
+    (DONE, "Завершена"),
+    (ERROR, "Ошибка отправки"),
+]
 
 
 class Client(models.Model):
     contact_email = models.EmailField(
-        max_length=50, verbose_name="Email", help_text="Введите свой email", unique=True)
-    fullname = models.TextField(verbose_name='фио')
-    comment = models.CharField(max_length=250, verbose_name='комментарий')
+        max_length=50, verbose_name="Email", help_text="Введите свой email", unique=True
+    )
+    fullname = models.TextField(verbose_name="фио")
+    comment = models.CharField(max_length=250, verbose_name="комментарий")
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        verbose_name="Компания",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return f"{self.contact_email} {self.fullname} {self.comment}"
 
     class Meta:
-        verbose_name = 'Клиент'
-        verbose_name_plural = 'Клиенты'
+        verbose_name = "Клиент"
+        verbose_name_plural = "Клиенты"
 
 
 class TextForNewsletter(models.Model):
-    subject = models.CharField(max_length=200, verbose_name='тема')
-    text = models.TextField(verbose_name='текст')
-    clients = models.ManyToManyField(Client, verbose_name='Клиенты для рассылки',
-                                     blank=True)
+    subject = models.CharField(max_length=200, verbose_name="тема")
+    text = models.TextField(verbose_name="текст")
+    clients = models.ManyToManyField(
+        Client, verbose_name="Клиенты для рассылки", blank=True
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        verbose_name="Компания",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return f"{self.subject} {self.text}"
@@ -42,32 +69,68 @@ class TextForNewsletter(models.Model):
 
 
 class Newsletter(models.Model):
-    start_time = models.DateTimeField(verbose_name='время начала рассылки', blank=True, null=True)
-    end_time = models.DateTimeField(verbose_name='время окончания рассылки', blank=True, null=True)
-    frequency = models.CharField(max_length=300, choices=FREQUENCY_CHOICES, verbose_name="Частота отправки")
-    status_of_newsletter = models.CharField(max_length=150, verbose_name='статус рассылки',
-                                            choices=STATUS_OF_NEWSLETTER)
-    clients = models.ManyToManyField(Client, verbose_name='Клиенты')
-    message = models.ManyToManyField(TextForNewsletter, verbose_name='Сообщение для отправки')
+    start_time = models.DateTimeField(
+        verbose_name="время начала рассылки", blank=True, null=True
+    )
+    end_time = models.DateTimeField(
+        verbose_name="время окончания рассылки", blank=True, null=True
+    )
+    frequency = models.CharField(
+        max_length=300, choices=FREQUENCY_CHOICES, verbose_name="Частота отправки"
+    )
+    status_of_newsletter = models.CharField(
+        max_length=150, verbose_name="статус рассылки", choices=STATUS_OF_NEWSLETTER
+    )
+    clients = models.ManyToManyField(Client, verbose_name="Клиенты")
+    message = models.ManyToManyField(
+        TextForNewsletter, verbose_name="Сообщение для отправки"
+    )
 
     def __str__(self):
         return f"{self.start_time} {self.end_time} {self.frequency} {self.status_of_newsletter} {self.clients} {self.message}"
 
     class Meta:
-        verbose_name = 'Рассылка'
-        verbose_name_plural = 'Рассылки'
+        verbose_name = "Рассылка"
+        verbose_name_plural = "Рассылки"
 
 
 class Log(models.Model):
-    time_attempt = models.DateTimeField(verbose_name='дата и время последней попытки', auto_now_add=True, null=True,
-                                        blank=True)
-    status_of_last_attempt = models.BooleanField(verbose_name='Статус попытки', null=True, blank=True)
-    client = models.ForeignKey(Client, verbose_name='Клиент', on_delete=models.CASCADE, null=True, blank=True)
-    message = models.ForeignKey(TextForNewsletter, verbose_name='Сообщение', on_delete=models.CASCADE, null=True,
-                                blank=True)
-    mailing_list = models.ForeignKey(Newsletter, verbose_name='Рассылка', on_delete=models.CASCADE, null=True,
-                                     blank=True)
-    server_response = models.CharField(verbose_name='Ответ почтового сервера', max_length=255, null=True, blank=True)
+    time_attempt = models.DateTimeField(
+        verbose_name="дата и время последней попытки",
+        auto_now_add=True,
+        null=True,
+        blank=True,
+    )
+    status_of_last_attempt = models.BooleanField(
+        verbose_name="Статус попытки", null=True, blank=True
+    )
+    client = models.ForeignKey(
+        Client, verbose_name="Клиент", on_delete=models.CASCADE, null=True, blank=True
+    )
+    message = models.ForeignKey(
+        TextForNewsletter,
+        verbose_name="Сообщение",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    mailing_list = models.ForeignKey(
+        Newsletter,
+        verbose_name="Рассылка",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    server_response = models.CharField(
+        verbose_name="Ответ почтового сервера", max_length=255, null=True, blank=True
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        verbose_name="Компания",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return f"Попытка отправки для {self.client} по рассылке {self.mailing_list}"
