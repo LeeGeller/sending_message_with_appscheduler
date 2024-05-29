@@ -15,4 +15,3 @@ class UsersRegisterForm(MixinForms, UserCreationForm):
             "password1",
             "password2",
         )
-
