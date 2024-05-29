@@ -4,7 +4,8 @@ from django.urls import path
 
 from config import settings
 from users.apps import UserConfig
-from users.form import CustomPasswordResetForm
+from users.form import UsersRegisterForm
+
 from users.services import email_verification
 from users.views import UserCreateView, PasswortResetView
 
@@ -17,7 +18,7 @@ urlpatterns = [
     path("registration/", UserCreateView.as_view(), name="registration"),
     path(
         "passwort_reset_view/",
-        PasswortResetView.as_view(form_class=CustomPasswordResetForm),
+        PasswortResetView.as_view(form_class=UsersRegisterForm),
         name="passwort_reset",
     ),
     path(

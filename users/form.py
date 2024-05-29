@@ -16,8 +16,3 @@ class UsersRegisterForm(MixinForms, UserCreationForm):
             "password2",
         )
 
-
-class CustomPasswordResetForm(forms.Form):
-    email = forms.EmailField(
-        label="Email", max_length=254, help_text="Введите email для отправки"
-    )
