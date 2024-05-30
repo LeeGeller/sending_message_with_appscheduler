@@ -42,14 +42,14 @@ class NewsletterCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
         user = self.request.user
         company = user.user_company
 
-        if not user.has_perm("schedule.can_change_newsletter_list"):
+        if not user.has_perm("schedule.cannot_change_newsletter_list"):
+            form.fields["clients"].queryset = Client.objects.filter(company=company)
+            form.fields["message"].queryset = TextForNewsletter.objects.filter(
+                company=company
+            )
+            return form
+        else:
             return HttpResponseForbidden("Go out!")
-
-        form.fields["clients"].queryset = Client.objects.filter(company=company)
-        form.fields["message"].queryset = TextForNewsletter.objects.filter(
-            company=company
-        )
-        return form
 
     def form_valid(self, form):
         newsletter = form.save(commit=False)

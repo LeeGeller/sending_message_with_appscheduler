@@ -68,8 +68,8 @@ class TextForNewsletter(models.Model):
         verbose_name_plural = "Тексты для рассылок"
         permissions = [
             (
-                "cannot_change_textfornewsletter_list",
-                "Не может изменять текст для рассылок",
+                "cann_change_textfornewsletter_list",
+                "Может изменять текст для рассылок",
             ),
         ]
 
@@ -102,8 +102,6 @@ class Newsletter(models.Model):
         permissions = [
             ("can_view_newsletter", "Может видеть все рассылки"),
             ("can_disable_newsletter", "Может отключать рассылки"),
-            ("cannot_manage_newsletter_list", "Не может управлять списком рассылок"),
-            ("cannot_change_newsletter_list", "Не может изменять рассылки"),
         ]
 
 

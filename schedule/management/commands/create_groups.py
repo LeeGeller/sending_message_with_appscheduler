@@ -4,16 +4,17 @@ from django.core.management import BaseCommand
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        # Создаем группу менеджеров, если она еще не существует
         managers_group, created = Group.objects.get_or_create(name="managers")
 
         permissions_list = [
             "can_view_newsletter",
             "can_disable_newsletter",
-            "cannot_manage_newsletter_list",
-            "cannot_change_textfornewsletter_list",
-            "cannot_change_newsletter_list",
-            "can_view_user_list",
+            "can_view_users_list",
             "can_block_users",
+            "cannot_change_newsletter_list",
+            "cannot_change_textfornewsletter_list",
+            "cannot_change_client_list",
         ]
 
         for perm in permissions_list:

@@ -17,7 +17,7 @@
         {% if perms.schedule.cannot_change_newsletter_list and not user.is_superuser %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Пользователи</a>
-        {% elif user.is_superuser and perms.schedule.can_change_newsletter %}
+        {% else %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:textfornewsletter_list' %}">Посты для рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>

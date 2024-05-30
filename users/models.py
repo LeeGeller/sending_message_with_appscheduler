@@ -8,7 +8,7 @@ class Company(models.Model):
     def __str__(self):
         return self.company_name
 
-    class Mets:
+    class Meta:
         verbose_name = "Компания"
         verbose_name_plural = "Компании"
 
@@ -40,7 +40,3 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
-        permissions = [
-            ("can_view_user_list", "Может просматривать список пользователей"),
-            ("can_block_users", "Может блокировать пользователей"),
-        ]
