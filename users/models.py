@@ -1,5 +1,3 @@
-from django.db import models
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -42,3 +40,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+        permissions = [
+            ("can_view_user_list", "Может просматривать список пользователей"),
+            ("can_block_users", "Может блокировать пользователей"),
+        ]
