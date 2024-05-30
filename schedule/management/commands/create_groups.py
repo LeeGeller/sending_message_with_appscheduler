@@ -3,8 +3,8 @@ from django.core.management import BaseCommand
 
 
 class Command(BaseCommand):
-    def handle(self):
-        managers_group = Group.objects.create(name="managers")
+    def handle(self, *args, **options):
+        managers_group, created = Group.objects.get_or_create(name="managers")
 
         permissions_list = [
             "can_view_newsletter",
@@ -19,13 +19,17 @@ class Command(BaseCommand):
         for perm in permissions_list:
             try:
                 permission = Permission.objects.get(codename=perm)
-                managers_group.objects.add(permission)
+                managers_group.permissions.add(permission)
+                self.stdout.write(
+                    self.style.SUCCESS(f"Permission {perm} added to group managers.")
+                )
             except Permission.DoesNotExist:
                 self.stdout.write(
-                    self.style.ERROR(f"Permission {permission} does not exist.")
+                    self.style.ERROR(f"Permission {perm} does not exist.")
                 )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f'Successfully created/updated group "moderators" with specified permissions.'
-                )
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f'Successfully created/updated group "managers" with specified permissions.'
             )
+        )
