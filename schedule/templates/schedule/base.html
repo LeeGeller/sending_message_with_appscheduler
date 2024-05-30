@@ -14,14 +14,17 @@
 
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
     <nav class="ms-5">
-        {% if perms.schedule.can_view_newsletter %}
+        {% if perms.schedule.cannot_change_newsletter_list and not user.is_superuser %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Пользователи</a>
-        {% else %}
+        {% elif user.is_superuser and perms.schedule.can_change_newsletter %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:textfornewsletter_list' %}">Посты для рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:log_list' %}">Статусы</a>
+        {% endif %}
+        {% if user.is_superuser %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Пользователи</a>
         {% endif %}
     </nav>
     <div class="col">

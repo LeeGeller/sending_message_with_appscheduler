@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Prefetch
 from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy, reverse
@@ -10,12 +10,16 @@ from schedule.services import send_mailing
 import logging
 
 
-class NewsletterListView(LoginRequiredMixin, ListView):
+class NewsletterListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Newsletter
+    permission_required = "schedule.can_view_newsletter"
 
     def get_queryset(self):
         user = self.request.user
         company = user.user_company
+
+        if user.has_perm("schedule.can_view_newsletter") or user.is_superuser:
+            return Newsletter.objects.all()
 
         newsletters = (
             Newsletter.objects.filter(clients__company=company)
@@ -25,9 +29,10 @@ class NewsletterListView(LoginRequiredMixin, ListView):
         return newsletters
 
 
-class NewsletterCreateView(LoginRequiredMixin, CreateView):
+class NewsletterCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Newsletter
     form_class = NewsletterForm
+    permission_required = "schedule.cannot_change_newsletter_list"
 
     success_url = reverse_lazy("schedule:newsletter_list")
 
@@ -36,6 +41,9 @@ class NewsletterCreateView(LoginRequiredMixin, CreateView):
 
         user = self.request.user
         company = user.user_company
+
+        if not user.has_perm("schedule.can_change_newsletter_list"):
+            return HttpResponseForbidden("Go out!")
 
         form.fields["clients"].queryset = Client.objects.filter(company=company)
         form.fields["message"].queryset = TextForNewsletter.objects.filter(
