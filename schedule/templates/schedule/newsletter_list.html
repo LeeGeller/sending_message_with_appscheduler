@@ -23,6 +23,7 @@
                         {{ news.message.subject }}
                     <p>{{ news.frequency }}</p>
                     <p>{{ news.status_of_newsletter }}</p>
+                    {% if perms.schedule.can_change_newsletter_list %}
                     <a type="button" class="btn btn-sm btn-block btn-outline-primary"
                        href="{% url 'schedule:newsletter_update' news.pk %}">
                         Изменить
@@ -31,6 +32,7 @@
                        href="{% url 'schedule:newsletter_delete' news.pk %}">
                         Удалить
                     </a>
+                    {% endif %}
                 </div>
                 </p>
             </div>

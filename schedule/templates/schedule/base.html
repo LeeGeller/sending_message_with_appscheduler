@@ -14,10 +14,15 @@
 
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
     <nav class="ms-5">
+        {% if perms.schedule.can_view_newsletter %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Пользователи</a>
+        {% else %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:client_list' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:textfornewsletter_list' %}">Посты для рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:newsletter_list' %}">Настройка рассылок</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'schedule:log_list' %}">Статусы</a>
+        {% endif %}
     </nav>
     <div class="col">
         <div class="col float-end">
