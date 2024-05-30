@@ -11,7 +11,7 @@ class UsersRegisterForm(MixinForms, UserCreationForm):
 
         fields = (
             "email",
-            "company",
+            "user_company",
             "password1",
             "password2",
         )
