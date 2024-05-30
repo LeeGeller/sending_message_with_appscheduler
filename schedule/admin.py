@@ -4,7 +4,7 @@ from schedule.models import Client, TextForNewsletter, Newsletter, Log
 
 
 @admin.register(Client)
-class Client(admin.ModelAdmin):
+class ClientAdmin(admin.ModelAdmin):
     list_display = (
         "pk",
         "contact_email",
@@ -14,7 +14,7 @@ class Client(admin.ModelAdmin):
 
 
 @admin.register(TextForNewsletter)
-class TextForNewsletter(admin.ModelAdmin):
+class TextForNewsletterAdmin(admin.ModelAdmin):
     list_display = (
         "pk",
         "subject",
@@ -23,18 +23,19 @@ class TextForNewsletter(admin.ModelAdmin):
 
 
 @admin.register(Newsletter)
-class Newsletter(admin.ModelAdmin):
+class NewsletterAdmin(admin.ModelAdmin):
     list_display = (
         "pk",
         "start_time",
         "end_time",
         "frequency",
         "status_of_newsletter",
+        "is_active",
     )
 
 
 @admin.register(Log)
-class Log(admin.ModelAdmin):
+class LogAdmin(admin.ModelAdmin):
     list_display = (
         "pk",
         "status_of_last_attempt",
