@@ -87,6 +87,7 @@ class Newsletter(models.Model):
     status_of_newsletter = models.CharField(
         max_length=150, verbose_name="статус рассылки", choices=STATUS_OF_NEWSLETTER
     )
+    is_active = models.BooleanField(default=True, verbose_name="Активна")
     clients = models.ManyToManyField(Client, verbose_name="Клиенты")
     message = models.ManyToManyField(
         TextForNewsletter, verbose_name="Сообщение для отправки"
