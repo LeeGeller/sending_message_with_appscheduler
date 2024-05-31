@@ -10,18 +10,15 @@ class Command(BaseCommand):
         company, created = Company.objects.get_or_create(company_name="Our company")
 
         # Создаем пользователя
-        user, created = User.objects.get_or_create(
+        user = User.objects.create(
             email="manager@companny.ru",
-            defaults={
-                "user_company": company,
-                "is_staff": True,
-                "is_active": True,
-            },
+            user_company=company,
+            is_staff=True,
+            is_active=True,
         )
-        if created:
-            user.set_password("12345")
-            user.save()
-            self.stdout.write(self.style.SUCCESS("Successfully created user."))
+
+        user.set_password("12345")
+        user.save()
 
         try:
             group = Group.objects.get(name="managers")

@@ -99,9 +99,13 @@ class Newsletter(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
+
         permissions = [
-            ("can_view_newsletter", "Может видеть все рассылки"),
+            ("can_view_all_newsletter", "Может видеть все рассылки"),
             ("can_disable_newsletter", "Может отключать рассылки"),
+            ("cannot_change_newsletter", "Не может изменять рассылки"),
+            ("cannot_delete_newsletter", "Не может удалять рассылки"),
+            ("cannot_create_newsletter", "Не может создавать рассылки"),
         ]
 
 

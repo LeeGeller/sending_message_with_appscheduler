@@ -2,7 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.db.models import Prefetch
 from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+    DetailView,
+)
 
 from schedule.forms import NewsletterForm
 from schedule.models import Newsletter, CREATE, Client, TextForNewsletter
@@ -10,29 +16,36 @@ from schedule.services import send_mailing
 import logging
 
 
-class NewsletterListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class NewsletterListView(LoginRequiredMixin, ListView):
     model = Newsletter
-    permission_required = "schedule.can_view_newsletter"
+    permission_required = "schedule.can_view_all_newsletter"
 
     def get_queryset(self):
         user = self.request.user
         company = user.user_company
 
-        if user.has_perm("schedule.can_view_newsletter") or user.is_superuser:
+        if user.has_perm("schedule.can_view_all_newsletter") or user.is_superuser:
             return Newsletter.objects.all()
 
-        newsletters = (
-            Newsletter.objects.filter(clients__company=company)
-            .prefetch_related("clients__company", "message")
-            .distinct()
-        )
-        return newsletters
+        else:
+            newsletters = (
+                Newsletter.objects.filter(clients__company=company)
+                .prefetch_related("clients__company", "message")
+                .distinct()
+            )
+            return newsletters
 
 
-class NewsletterCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class NewsletterLDetailView(LoginRequiredMixin, DetailView):
+    model = Newsletter
+
+    def get_success_url(self):
+        return reverse("schedule:newsletter_detail")
+
+
+class NewsletterCreateView(LoginRequiredMixin, CreateView):
     model = Newsletter
     form_class = NewsletterForm
-    permission_required = "schedule.cannot_change_newsletter_list"
 
     success_url = reverse_lazy("schedule:newsletter_list")
 
@@ -42,14 +55,11 @@ class NewsletterCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
         user = self.request.user
         company = user.user_company
 
-        if not user.has_perm("schedule.cannot_change_newsletter_list"):
-            form.fields["clients"].queryset = Client.objects.filter(company=company)
-            form.fields["message"].queryset = TextForNewsletter.objects.filter(
-                company=company
-            )
-            return form
-        else:
-            return HttpResponseForbidden("Go out!")
+        form.fields["clients"].queryset = Client.objects.filter(company=company)
+        form.fields["message"].queryset = TextForNewsletter.objects.filter(
+            company=company
+        )
+        return form
 
     def form_valid(self, form):
         newsletter = form.save(commit=False)
