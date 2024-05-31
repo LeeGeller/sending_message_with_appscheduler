@@ -1,0 +1,42 @@
+{% extends "schedule/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Детали рассылки</h2>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Начало: {{ newsletter.start_time }}</h5>
+                    <h5 class="card-title">Окончание: {{ newsletter.end_time }}</h5>
+                    <h5 class="card-title">Частота: {{ newsletter.frequency }}</h5>
+                    <h5 class="card-title">Статус: {{ newsletter.status_of_newsletter }}</h5>
+                    <h5 class="card-title">Активна: {{ newsletter.is_active|yesno:"Да,Нет" }}</h5>
+
+                    <hr>
+                    {% if perms.schedule.cannot_change_newsletter %}
+                    <h5>Клиенты:</h5>
+                    <ul class="list-group mb-3">
+                        {% for client in newsletter.clients.all %}
+                        <li class="list-group-item">{{ client.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                    <h5>Сообщения:</h5>
+                    <ul class="list-group mb-3">
+                        {% for message in newsletter.message.all %}
+                        <li class="list-group-item">{{ message.content }}</li>
+                    </ul>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="card-footer">
+                    <a href="{% url 'schedule:newsletter_list' %}" class="btn btn-primary">Назад к списку рассылок</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
