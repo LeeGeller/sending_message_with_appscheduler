@@ -1,0 +1,73 @@
+{% extends 'schedule/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-1 pb-md-2 mx-auto text-center">
+    <h1 class="display-4">Наши пользователи
+        {% if perms.user.can_create_users %}
+        <div class="float-end">
+            <a type="button" class="btn btn-lg btn-block btn-outline-success"
+               href="{% url 'schedule:newsletter_form' %}">
+                Создать
+            </a>
+        </div>
+        {% endif %}
+    </h1>
+</div>
+<main>
+    <div class="album py-4 bg-body-tertiary">
+        <div class="container text-start">
+            {% for user in object_list %}
+            {% if user.avatar %}
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <img class="card-img-left img-fluid" src="{{ user.avatar|mymedia }}"
+                         alt="Картинок не завезли">
+                </div>
+            </div>
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                         {{ news.status_of_newsletter }}
+                    </h5>
+                    <p class="card-text">
+                        {{ user.email }}
+                    <p>{{ use.user_company }}</p>
+                    <p>{{ user.avatar }}</p>
+                    <a type="button" class="btn btn-sm btn-block btn-outline-warning"
+                       href="">
+                        Посмотреть
+                    </a>
+                    {% if perms.schedule.can_disable_newsletter %}
+                    {% if not user.is_active %}
+                    <a type="button" class="btn btn-sm btn-block btn-outline-success"
+                       href="">
+                        Разблокировать
+                    </a>
+                    {% else %}
+                    <a type="button" class="btn btn-sm btn-block btn-outline-success"
+                       href="">
+                        Заблокировать
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                    {% if perms.users.change_user %}
+                    <a type="button" class="btn btn-sm btn-block btn-outline-primary"
+                       href="">
+                        Изменить
+                    </a>
+                    <a type="button" class="btn btn-sm btn-block btn-outline-danger"
+                       href="">
+                        Удалить
+                    </a>
+                    {% endif %}
+                </div>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    </div>
+</main>
+{% endblock %}

@@ -1,8 +1,9 @@
 import secrets
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, ListView
 
 from config.settings import DEFAULT_FROM_EMAIL
 from users.form import UsersRegisterForm
@@ -51,3 +52,8 @@ class PasswortResetView(FormView):
             recipient_list=[user.email],
         )
         return super().form_valid(form)
+
+
+class UserListView(LoginRequiredMixin, ListView):
+    model = User
+    success_url = reverse_lazy("users:user_list")
