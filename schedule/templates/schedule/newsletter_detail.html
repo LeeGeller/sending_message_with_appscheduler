@@ -16,22 +16,23 @@
                     <h5 class="card-title">Активна: {{ newsletter.is_active|yesno:"Да,Нет" }}</h5>
 
                     <hr>
-                    {% if perms.schedule.cannot_change_newsletter %}
+                    {% if not user.is_staff %}
                     <h5>Клиенты:</h5>
                     <ul class="list-group mb-3">
-                        {% for client in newsletter.clients.all %}
-                        <li class="list-group-item">{{ client.name }}</li>
+                        {% for clients in newsletter.clients.all %}
+                        <li class="list-group-item">{{ clients }}</li>
                         {% endfor %}
                     </ul>
                     <hr>
                     <h5>Сообщения:</h5>
                     <ul class="list-group mb-3">
-                        {% for message in newsletter.message.all %}
-                        <li class="list-group-item">{{ message.content }}</li>
+                        {% for messages in newsletter.message.all %}
+                        <li class="list-group-item">{{ messages }}</li>
+                        {% endfor %}
                     </ul>
-                    {% endfor %}
+                    {% endif %}
                 </div>
-                {% endif %}
+
                 <div class="card-footer">
                     <a href="{% url 'schedule:newsletter_list' %}" class="btn btn-primary">Назад к списку рассылок</a>
                 </div>

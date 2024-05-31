@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
+from schedule.services import toggle_activity
 from schedule.views.client import (
     ClientsListView,
     ClientCreateView,
@@ -38,6 +39,7 @@ urlpatterns = [
         NewsletterLDetailView.as_view(),
         name="newsletter_detail",
     ),
+    path("activity/<int:pk>", toggle_activity, name="toggle_activity"),
     path("newsletter_form/", NewsletterCreateView.as_view(), name="newsletter_form"),
     path(
         "<int:pk>/newsletter_update",

@@ -4,8 +4,9 @@ from smtplib import SMTPException
 import pytz
 from django.conf import settings
 from django.core.mail import send_mail
+from django.shortcuts import redirect
 
-from schedule.models import Log, DONE, ERROR
+from schedule.models import Log, DONE, ERROR, Newsletter
 
 
 def send_mailing(mailing):
@@ -24,13 +25,13 @@ def send_mailing(mailing):
                         message=post.text,
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[client.contact_email],
-                        fail_silently=False
+                        fail_silently=False,
                     )
                     # Создаем объект Log для записи в журнал
                     log = Log.objects.create(
                         time_attempt=current_datetime,
                         status_of_last_attempt=bool(result),
-                        server_response='OK' if result else 'Error',
+                        server_response="OK" if result else "Error",
                         mailing_list=mailing,
                         client=client,
                     )
@@ -49,3 +50,14 @@ def send_mailing(mailing):
     if mailing.status_of_newsletter != DONE:
         mailing.status_of_newsletter = ERROR
     mailing.save()
+
+
+def toggle_activity(request, pk):
+    mailing = Newsletter.objects.get(pk=pk)
+    if mailing.is_active:
+        mailing.is_active = False
+    else:
+        mailing.is_active = True
+
+    mailing.save()
+    return redirect("schedule:newsletter_list")

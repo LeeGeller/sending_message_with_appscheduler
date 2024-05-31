@@ -1,6 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Prefetch
-from django.http import HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     ListView,
@@ -13,12 +12,12 @@ from django.views.generic import (
 from schedule.forms import NewsletterForm
 from schedule.models import Newsletter, CREATE, Client, TextForNewsletter
 from schedule.services import send_mailing
-import logging
 
 
 class NewsletterListView(LoginRequiredMixin, ListView):
     model = Newsletter
     permission_required = "schedule.can_view_all_newsletter"
+    success_url = reverse_lazy("schedule:newsletter_list")
 
     def get_queryset(self):
         user = self.request.user
@@ -38,6 +37,19 @@ class NewsletterListView(LoginRequiredMixin, ListView):
 
 class NewsletterLDetailView(LoginRequiredMixin, DetailView):
     model = Newsletter
+    context_object_name = "newsletter"
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        user = self.request.user
+        if (
+            user.is_superuser
+            or (obj.clients.filter(company=user.user_company).exists())
+            or user.is_staff
+        ):
+            return obj
+        else:
+            raise Http404("You do not have permission to view this newsletter.")
 
     def get_success_url(self):
         return reverse("schedule:newsletter_detail")
