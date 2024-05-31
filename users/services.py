@@ -9,3 +9,14 @@ def email_verification(request, token):
     user.is_active = True
     user.save()
     return redirect(reverse("users:login"))
+
+
+def toggle_activity(request, pk):
+    user = User.objects.get(pk=pk)
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
+
+    user.save()
+    return redirect("users:user_list")

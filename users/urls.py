@@ -6,8 +6,8 @@ from config import settings
 from users.apps import UserConfig
 from users.form import UsersRegisterForm
 
-from users.services import email_verification
-from users.views import UserCreateView, PasswortResetView, UserListView
+from users.services import email_verification, toggle_activity
+from users.views import UserCreateView, PasswortResetView, UserListView, UserDetailView
 
 app_name = UserConfig.name
 
@@ -27,6 +27,8 @@ urlpatterns = [
         name="confirm-register",
     ),
     path("user_list/", UserListView.as_view(), name="user_list"),
+    path("user_detail/<int:pk>", UserDetailView.as_view(), name="user_detail"),
+    path("activity/<int:pk>", toggle_activity, name="activity"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
