@@ -29,6 +29,7 @@
                        href="{% url 'schedule:newsletter_detail' news.pk %}">
                         Посмотреть
                     </a>
+                    {% if perms.schedule.can_disable_newsletter %}
                     {% if not news.is_active %}
                     <a type="button" class="btn btn-sm btn-block btn-outline-warning"
                        href="{% url 'schedule:toggle_activity' news.pk %}">
@@ -39,6 +40,7 @@
                        href="{% url 'schedule:toggle_activity' news.pk %}">
                         Активна
                     </a>
+                    {% endif %}
                     {% endif %}
                     {% if perms.schedule.can_change_newsletter_list %}
                     <a type="button" class="btn btn-sm btn-block btn-outline-primary"
