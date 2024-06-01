@@ -16,3 +16,30 @@ def get_users_menu(context):
             {"id": 2, "name": "Регистрация", "templates": "users:registration"},
         ]
     return {"users_menu": users_menu}
+
+
+@register.inclusion_tag("schedule/all_menus.html", takes_context=True)
+def get_menu(context):
+    request = context.get("request")
+
+    all_menu = [
+        {"id": 1, "name": "Клиенты", "templates": "schedule:client_list"},
+        {
+            "id": 2,
+            "name": "Посты для рассылок",
+            "templates": "schedule:textfornewsletter_list",
+        },
+        {"id": 3, "name": "Рассылки", "templates": "schedule:newsletter_list"},
+        {"id": 4, "name": "Статусы", "templates": "schedule:log_list"},
+        {"id": 5, "name": "Пользователи", "templates": "users:user_list"},
+        {"id": 6, "name": "Блог", "templates": "blog:blog_list"},
+    ]
+
+    if request.user.is_superuser:
+        return {"all_menu": all_menu}
+    elif request.user.has_perm("schedule.change_newsletter"):
+        users_menu = [all_menu[0], all_menu[1], all_menu[2], all_menu[3], all_menu[5]]
+        return {"all_menu": users_menu}
+    else:
+        managers_menu = [all_menu[2], all_menu[6], all_menu[7]]
+        return {"all_menu": managers_menu}
