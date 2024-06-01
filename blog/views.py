@@ -1,7 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+    DetailView,
+)
 
 from blog.forms import BlogForm
 from blog.models import Blog
@@ -47,3 +53,13 @@ class BlogUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
 class BlogDeleteView(LoginRequiredMixin, StaffRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy("blog:blog_list")
+
+
+class BlogDetailView(LoginRequiredMixin, DetailView):
+    model = Blog
+
+    def get_object(self, queryset=None):
+        blog = super().get_object(queryset)
+        blog.count_views += 1
+        blog.save()
+        return blog
