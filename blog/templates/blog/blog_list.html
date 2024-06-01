@@ -6,7 +6,7 @@
         {% if user.is_staff%}
         <div class="float-end">
             <a type="button" class="btn btn-lg btn-block btn-outline-success"
-               href="">
+               href="{% url 'blog:blog_form' %}">
                 Создать статью
             </a>
         </div>
@@ -31,6 +31,11 @@
                 <div class="card-footer bg-transparent border-0">
                     <p class="card-text">Просмотров: {{ object.count_views }}</p>
                     <a type="button" class="btn btn-sm btn-primary me-2" href="">Подробнее</a>
+                    {% if user.is_staff %}
+                    <a type="button" class="btn btn-sm btn-warning me-2"
+                       href="{% url 'blog:blog_update' object.pk %}">Изменить</a>
+                    <a type="button" class="btn btn-sm btn-danger me-2" href="">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

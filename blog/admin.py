@@ -12,4 +12,5 @@ class BlogAdmin(admin.ModelAdmin):
         "text",
         "image",
         "count_views",
+        "author",
     )
