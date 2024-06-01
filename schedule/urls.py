@@ -1,8 +1,8 @@
-from schedule.apps import ScheduleConfig
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
+from schedule.apps import ScheduleConfig
 from schedule.services import toggle_activity
 from schedule.views.client import (
     ClientsListView,
@@ -10,7 +10,7 @@ from schedule.views.client import (
     ClientUpdateView,
     ClientDeleteView,
 )
-from schedule.views.log import LogListView
+from schedule.views.home import HomeView
 from schedule.views.newsletter import (
     NewsletterListView,
     NewsletterCreateView,
@@ -28,7 +28,7 @@ from schedule.views.text_for_newsletter import (
 app_name = ScheduleConfig.name
 
 urlpatterns = [
-    path("", LogListView.as_view(), name="log_list"),
+    path("", HomeView.as_view(), name="home"),
     path("client_list/", ClientsListView.as_view(), name="client_list"),
     path("client_form/", ClientCreateView.as_view(), name="client_form"),
     path("<int:pk>/client_update", ClientUpdateView.as_view(), name="client_update"),

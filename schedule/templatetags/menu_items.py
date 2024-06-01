@@ -30,7 +30,7 @@ def get_menu(context):
             "templates": "schedule:textfornewsletter_list",
         },
         {"id": 3, "name": "Рассылки", "templates": "schedule:newsletter_list"},
-        {"id": 4, "name": "Статусы", "templates": "schedule:log_list"},
+        {"id": 4, "name": "Главная страница", "templates": "schedule:home"},
         {"id": 5, "name": "Пользователи", "templates": "users:user_list"},
         {"id": 6, "name": "Блог", "templates": "blog:blog_list"},
     ]

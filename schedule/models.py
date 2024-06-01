@@ -3,7 +3,7 @@ from django.db import models
 from users.models import Company
 
 CREATE = "Создана"
-STARTED = "Отправлено"
+STARTED = "В работе"
 DONE = "Завершена"
 ERROR = "Ошибка отправки"
 
