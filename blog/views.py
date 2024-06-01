@@ -1,18 +1,18 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from blog.forms import BlogForm
 from blog.models import Blog
 
 
-class DispatchMixin:
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            return PermissionDenied("Go out!")
-        else:
-            return super().dispatch(request, *args, **kwargs)
+class StaffRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        raise PermissionDenied("У вас нет доступа к этой странице!")
 
 
 class BlogListView(LoginRequiredMixin, ListView):
@@ -20,7 +20,7 @@ class BlogListView(LoginRequiredMixin, ListView):
     success_url = reverse_lazy("blog:blog_list")
 
 
-class BlogCreateView(LoginRequiredMixin, DispatchMixin, CreateView):
+class BlogCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = Blog
     form_class = BlogForm
     success_url = reverse_lazy("blog:blog_list")
@@ -32,7 +32,7 @@ class BlogCreateView(LoginRequiredMixin, DispatchMixin, CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdateView(LoginRequiredMixin, DispatchMixin, UpdateView):
+class BlogUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = Blog
     form_class = BlogForm
     success_url = reverse_lazy("blog:blog_list")
@@ -42,3 +42,8 @@ class BlogUpdateView(LoginRequiredMixin, DispatchMixin, UpdateView):
         blog = form.save(commit=False)
         blog.author = user
         return super().form_valid(form)
+
+
+class BlogDeleteView(LoginRequiredMixin, StaffRequiredMixin, DeleteView):
+    model = Blog
+    success_url = reverse_lazy("blog:blog_list")
