@@ -13,11 +13,15 @@
 <body>
 
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <nav class="ms-5">
-        {% get_menu %}
-    </nav>
-    <div class="col">
-        <div class="col float-end">
+    <div class="col-6">
+        <div class="row">
+            <nav class="ms-5 d-flex gap-2">
+                {% get_menu %}
+            </nav>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="col float-end d-flex gap-2">
             {% get_users_menu %}
         </div>
     </div>

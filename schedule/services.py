@@ -1,12 +1,15 @@
 from datetime import datetime
+from random import shuffle
 from smtplib import SMTPException
 
 import pytz
 from django.conf import settings
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 
-from schedule.models import Log, DONE, ERROR, Newsletter
+from blog.models import Blog
+from schedule.models import Log, DONE, ERROR, Newsletter, STARTED
 
 
 def send_mailing(mailing):

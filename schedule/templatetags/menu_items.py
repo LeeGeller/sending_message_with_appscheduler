@@ -41,5 +41,10 @@ def get_menu(context):
         users_menu = [all_menu[0], all_menu[1], all_menu[2], all_menu[3], all_menu[5]]
         return {"all_menu": users_menu}
     else:
-        managers_menu = [all_menu[2], all_menu[6], all_menu[7]]
+
+        managers_menu = [
+            all_menu[2],
+            all_menu[5],
+            all_menu[3],
+        ]
         return {"all_menu": managers_menu}
