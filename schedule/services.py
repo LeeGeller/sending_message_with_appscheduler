@@ -1,15 +1,12 @@
 from datetime import datetime
-from random import shuffle
 from smtplib import SMTPException
 
 import pytz
 from django.conf import settings
-from django.core.cache import cache
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 
-from blog.models import Blog
-from schedule.models import Log, DONE, ERROR, Newsletter, STARTED
+from schedule.models import Log, DONE, ERROR, Newsletter, IN_WORK
 
 
 def send_mailing(mailing):
@@ -19,7 +16,7 @@ def send_mailing(mailing):
     time_obj = datetime.strptime(current_time_formatted, "%Y-%m-%d %H:%M:%S%z")
 
     # Проверяем, должна ли рассылка выполняться в данный момент времени
-    if mailing.start_time >= time_obj <= mailing.end_time:
+    if mailing.start_time <= time_obj <= mailing.end_time:
         try:
             for client in mailing.clients.all():
                 for post in mailing.message.all():
@@ -49,10 +46,14 @@ def send_mailing(mailing):
                 mailing_list=mailing,
             )
             log.save()
-        mailing.status_of_newsletter = DONE
-    if mailing.status_of_newsletter != DONE:
-        mailing.status_of_newsletter = ERROR
+        if mailing.end_time <= time_obj:
+
+            mailing.status_of_newsletter = DONE
+        elif mailing.end_time >= time_obj:
+            mailing.status_of_newsletter = IN_WORK
+
     mailing.save()
+    print(6)
 
 
 def toggle_activity(request, pk):

@@ -3,7 +3,7 @@ from random import shuffle
 from django.views.generic import ListView
 
 from blog.models import Blog
-from schedule.models import Newsletter, DONE, STARTED
+from schedule.models import Newsletter, DONE, IN_WORK
 
 
 class HomeView(ListView):
@@ -17,7 +17,7 @@ class HomeView(ListView):
         newsletters = queryset.filter()
 
         newsletters_done_count = newsletters.filter(status_of_newsletter=DONE).count()
-        newsletters_active = newsletters.filter(status_of_newsletter=STARTED).count()
+        newsletters_active = newsletters.filter(status_of_newsletter=IN_WORK).count()
         unique_clients = (
             newsletters.prefetch_related("clients").all().distinct().count()
         )

@@ -3,7 +3,7 @@ from django.db import models
 from users.models import Company
 
 CREATE = "Создана"
-STARTED = "В работе"
+IN_WORK = "В работе"
 DONE = "Завершена"
 ERROR = "Ошибка отправки"
 
@@ -18,7 +18,7 @@ FREQUENCY_CHOICES = [
 ]
 STATUS_OF_NEWSLETTER = [
     (CREATE, "Создана"),
-    (STARTED, "Запущена"),
+    (IN_WORK, "Запущена"),
     (DONE, "Завершена"),
     (ERROR, "Ошибка отправки"),
 ]

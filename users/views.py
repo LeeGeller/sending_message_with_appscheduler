@@ -13,7 +13,7 @@ from users.models import User
 class UserCreateView(CreateView):
     model = User
     form_class = UsersRegisterForm
-    success_url = reverse_lazy("users:login")
+    success_url = reverse_lazy("users:home")
 
     def form_valid(self, form):
         user = form.save(commit=False)
