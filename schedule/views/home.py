@@ -18,17 +18,18 @@ class HomeView(ListView):
 
         newsletters_done_count = newsletters.filter(status_of_newsletter=DONE).count()
         newsletters_active = newsletters.filter(status_of_newsletter=STARTED).count()
+        unique_clients = (
+            newsletters.prefetch_related("clients").all().distinct().count()
+        )
 
         context["newsletters_done_count"] = newsletters_done_count
         context["newsletters_active"] = newsletters_active
+        context["unique_clients"] = unique_clients
 
-        blog = Blog.objects.all()
-        blog_pk = blog.values_list("pk", flat=True)
-        blog_pk_list = list(blog_pk)
-        shuffle(blog_pk_list)
-        blogs_list = list()
-        for pk in blog_pk_list[:3]:
-            blogs_list.append(blog.get(pk=pk))
+        blog_pks = list(Blog.objects.values_list("pk", flat=True))
+        shuffle(blog_pks)
+        selected_blog_pks = blog_pks[:3]
+        blogs_list = Blog.objects.filter(pk__in=selected_blog_pks)
 
         context["blogs_list"] = blogs_list
 
