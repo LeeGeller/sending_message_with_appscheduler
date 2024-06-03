@@ -63,7 +63,6 @@ class NewsletterCreateView(LoginRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-
         user = self.request.user
         company = user.user_company
 
@@ -83,6 +82,8 @@ class NewsletterCreateView(LoginRequiredMixin, CreateView):
         newsletter.status_of_newsletter = CREATE
         newsletter.start_time = selected_start_time
 
+        user = self.request.user
+        newsletter.owner = user
         newsletter.save()
 
         newsletter.clients.set(selected_clients)
@@ -99,7 +100,6 @@ class NewsletterUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-
         user = self.request.user
         company = user.user_company
 
@@ -119,16 +119,15 @@ class NewsletterUpdateView(LoginRequiredMixin, UpdateView):
         selected_messages = form.cleaned_data.get("message")
         selected_start_time = form.cleaned_data.get("start_time")
 
-        newsletter.clients.clear()
-        newsletter.message.clear()
-
-        newsletter.clients.set(selected_clients)
-        newsletter.message.set(selected_messages)
-
         newsletter.status_of_newsletter = CREATE
         newsletter.start_time = selected_start_time
 
+        user = self.request.user
+        newsletter.owner = user
         newsletter.save()
+
+        newsletter.clients.set(selected_clients)
+        newsletter.message.set(selected_messages)
 
         send_mailing(newsletter)
 

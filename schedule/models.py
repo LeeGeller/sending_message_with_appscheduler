@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import Company
+from users.models import Company, User
 
 CREATE = "Создана"
 IN_WORK = "В работе"
@@ -18,7 +18,7 @@ FREQUENCY_CHOICES = [
 ]
 STATUS_OF_NEWSLETTER = [
     (CREATE, "Создана"),
-    (IN_WORK, "Запущена"),
+    (IN_WORK, "В работе"),
     (DONE, "Завершена"),
     (ERROR, "Ошибка отправки"),
 ]
@@ -91,6 +91,9 @@ class Newsletter(models.Model):
     clients = models.ManyToManyField(Client, verbose_name="Клиенты")
     message = models.ManyToManyField(
         TextForNewsletter, verbose_name="Сообщение для отправки"
+    )
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Владелец", null=True, blank=True
     )
 
     def __str__(self):

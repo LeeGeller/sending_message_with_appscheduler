@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "bootstrap_datepicker_plus",
     "django_crontab",
+    "django_extensions",
     "schedule",
     "users",
     "blog",

@@ -18,9 +18,7 @@ class HomeView(ListView):
 
         newsletters_done_count = newsletters.filter(status_of_newsletter=DONE).count()
         newsletters_active = newsletters.filter(status_of_newsletter=IN_WORK).count()
-        unique_clients = (
-            newsletters.prefetch_related("clients").all().distinct().count()
-        )
+        unique_clients = newsletters.values("clients").distinct().count()
 
         context["newsletters_done_count"] = newsletters_done_count
         context["newsletters_active"] = newsletters_active

@@ -5,8 +5,7 @@ from schedule.services import send_mailing
 
 
 def create_task_for_frequency(frequency, interval):
-    print(2)
-    mailings = Newsletter.objects.filter(
+    mailings = Newsletter.objects.prefetch_related("clients", "message").filter(
         frequency=frequency, status_of_newsletter__in=[CREATE, IN_WORK], is_active=True
     )
     if mailings.exists():

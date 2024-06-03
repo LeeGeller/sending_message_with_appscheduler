@@ -32,8 +32,9 @@ def send_mailing(mailing):
                         time_attempt=current_datetime,
                         status_of_last_attempt=bool(result),
                         server_response="OK" if result else "Error",
-                        mailing_list=mailing,
+                        mailing_list=post,
                         client=client,
+                        company=client.company,
                     )
                     log.save()
 
@@ -47,13 +48,11 @@ def send_mailing(mailing):
             )
             log.save()
         if mailing.end_time <= time_obj:
-
             mailing.status_of_newsletter = DONE
         elif mailing.end_time >= time_obj:
             mailing.status_of_newsletter = IN_WORK
 
     mailing.save()
-    print(6)
 
 
 def toggle_activity(request, pk):

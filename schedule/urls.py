@@ -29,7 +29,7 @@ from schedule.views.text_for_newsletter import (
 app_name = ScheduleConfig.name
 
 urlpatterns = [
-    path("", cache_page(600)(HomeView.as_view()), name="home"),
+    path("", cache_page(180)(HomeView.as_view()), name="home"),
     path("client_list/", ClientsListView.as_view(), name="client_list"),
     path("client_form/", ClientCreateView.as_view(), name="client_form"),
     path("<int:pk>/client_update", ClientUpdateView.as_view(), name="client_update"),
