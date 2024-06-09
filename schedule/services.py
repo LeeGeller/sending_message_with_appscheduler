@@ -72,11 +72,11 @@ def toggle_activity(request, pk):
 
 
 def get_cached_blog(request):
-    blogs_list = cache.get('cached_blogs_list')
+    blogs_list = cache.get("cached_blogs_list")
     if not blogs_list:
         blog_pks = list(Blog.objects.values_list("pk", flat=True))
         shuffle(blog_pks)
         selected_blog_pks = blog_pks[:3]
         blogs_list = Blog.objects.filter(pk__in=selected_blog_pks)
-        cache.set('cached_blogs_list', blogs_list, 60 * 5)
+        cache.set("cached_blogs_list", blogs_list, 60 * 5)
     return blogs_list

@@ -15,8 +15,8 @@ class NewsletterForm(MixinForms):
 
     class Meta:
         model = Newsletter
-        fields = ['start_time', 'end_time', 'frequency', 'clients', 'message']
+        fields = ["start_time", "end_time", "frequency", "clients", "message"]
         widgets = {
-            'start_time': DateTimePickerInput(),
-            'end_time': DateTimePickerInput(),
+            "start_time": DateTimePickerInput(),
+            "end_time": DateTimePickerInput(),
         }

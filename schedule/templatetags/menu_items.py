@@ -17,6 +17,7 @@ def get_users_menu(context):
         ]
     return {"users_menu": users_menu}
 
+
 @register.inclusion_tag("schedule/all_menus.html", takes_context=True)
 def get_menu(context):
     request = context.get("request")

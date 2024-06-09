@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from schedule.crontab import do
 
 logger = logging.getLogger(__name__)
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
 django.setup()
 
 

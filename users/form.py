@@ -7,14 +7,10 @@ from users.models import User, Company
 
 class UsersRegisterForm(UserCreationForm):
     existing_company = forms.ModelChoiceField(
-        queryset=Company.objects.all(),
-        required=False,
-        label="Существующая компания"
+        queryset=Company.objects.all(), required=False, label="Существующая компания"
     )
     new_company = forms.CharField(
-        max_length=150,
-        required=False,
-        label="Новая компания"
+        max_length=150, required=False, label="Новая компания"
     )
 
     class Meta:
@@ -27,10 +23,14 @@ class UsersRegisterForm(UserCreationForm):
         new_company = cleaned_data.get("new_company")
 
         if not existing_company and not new_company:
-            raise forms.ValidationError("Необходимо выбрать существующую компанию или ввести новую.")
+            raise forms.ValidationError(
+                "Необходимо выбрать существующую компанию или ввести новую."
+            )
 
         if existing_company and new_company:
-            raise forms.ValidationError("Можно выбрать только одну опцию: либо существующую компанию, либо ввести новую.")
+            raise forms.ValidationError(
+                "Можно выбрать только одну опцию: либо существующую компанию, либо ввести новую."
+            )
 
         return cleaned_data
 
