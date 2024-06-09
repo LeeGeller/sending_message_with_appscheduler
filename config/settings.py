@@ -24,7 +24,7 @@ load_dotenv(dotenv_path=dot_env)
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-dl5=xdo)an+o0pkcs7!&rb+@y92q4k89a&dk6di6pq@bnh^(na"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -75,7 +75,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = "config.wsgi.application"
 
@@ -148,25 +147,23 @@ STATICFILES_DIRS = (BASE_DIR / "static",)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = Path(BASE_DIR, "media")
 
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.yandex.ru"
-EMAIL_PORT = 587
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
 
-SERVER_EMAIL = EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = os.getenv('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
-CACHE_ENABLED = True
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
 
 if CACHE_ENABLED:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379",
-            "KEY_PREFIX": "my_prefix",
+            "LOCATION": os.getenv('LOCATION'),
         }
     }
 
@@ -180,7 +177,7 @@ CRONJOBS = [
     (
         "*/1 * * * *",
         "schedule.crontab.do",
-        ">> /home/kris/sky_projects/sending_message_with_appscheduler-main/schedule/schedule_job_logcron.log",
+        os.getenv('CRONJOBS_PATH'),
     ),
 ]
-CRONTAB_COMMAND_PREFIX = "source /home/kris/sky_projects/sending_message_with_appscheduler-main/venv/bin/activate &&"
+CRONTAB_COMMAND_PREFIX = os.getenv('CRONTAB_COMMAND_PREFIX')
