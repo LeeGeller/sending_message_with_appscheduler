@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Company(models.Model):
@@ -23,6 +24,8 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+    phone = PhoneNumberField(unique=True, verbose_name="Телефон", blank=True, null=True)
+    city = models.CharField(max_length=150, verbose_name="Город")
     token = models.CharField(
         max_length=200, verbose_name="Token", blank=True, null=True
     )

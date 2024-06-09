@@ -43,9 +43,9 @@ class NewsletterLDetailView(LoginRequiredMixin, DetailView):
         obj = super().get_object(queryset)
         user = self.request.user
         if (
-            user.is_superuser
-            or (obj.clients.filter(company=user.user_company).exists())
-            or user.is_staff
+                user.is_superuser
+                or (obj.clients.filter(company=user.user_company).exists())
+                or user.is_staff
         ):
             return obj
         else:
@@ -87,7 +87,8 @@ class NewsletterCreateView(LoginRequiredMixin, CreateView):
         newsletter.save()
 
         newsletter.clients.set(selected_clients)
-        newsletter.message.set(selected_messages)
+        newsletter.message = selected_messages
+
 
         send_mailing(newsletter)
 
@@ -126,8 +127,8 @@ class NewsletterUpdateView(LoginRequiredMixin, UpdateView):
         newsletter.owner = user
         newsletter.save()
 
+        newsletter.message = selected_messages
         newsletter.clients.set(selected_clients)
-        newsletter.message.set(selected_messages)
 
         send_mailing(newsletter)
 

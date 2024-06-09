@@ -12,7 +12,10 @@ class TextForNewsletterListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
 
-        return TextForNewsletter.objects.filter(company=user.user_company)
+        if user.is_superuser:
+            return TextForNewsletter.objects.all()
+        else:
+            return TextForNewsletter.objects.filter(company=user.user_company)
 
 
 class TextForNewsletterCreateView(LoginRequiredMixin, CreateView):

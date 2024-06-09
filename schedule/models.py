@@ -89,8 +89,8 @@ class Newsletter(models.Model):
     )
     is_active = models.BooleanField(default=True, verbose_name="Активна")
     clients = models.ManyToManyField(Client, verbose_name="Клиенты")
-    message = models.ManyToManyField(
-        TextForNewsletter, verbose_name="Сообщение для отправки"
+    message = models.ForeignKey(
+        TextForNewsletter, verbose_name="Сообщение для отправки", on_delete=models.CASCADE
     )
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="Владелец", null=True, blank=True

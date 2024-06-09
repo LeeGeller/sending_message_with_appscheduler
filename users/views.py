@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, ListView, DetailView
 
-from config.settings import DEFAULT_FROM_EMAIL
+from config.settings import DEFAULT_FROM_EMAIL, EMAIL_HOST_USER
 from users.form import UsersRegisterForm
 from users.models import User
 
@@ -13,7 +13,7 @@ from users.models import User
 class UserCreateView(CreateView):
     model = User
     form_class = UsersRegisterForm
-    success_url = reverse_lazy("users:home")
+    success_url = reverse_lazy("schedule:home")
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -24,9 +24,9 @@ class UserCreateView(CreateView):
         url = f"http://{host}/users/confirm-register/{user.token}/"
 
         send_mail(
-            subject="Hi! You need to confirm your registrations",
-            message=f"Clicke here if it was you: {url}",
-            from_email=DEFAULT_FROM_EMAIL,
+            subject="Hi! You need to confirm your registration",
+            message=f"Click here if it was you: {url}",
+            from_email=EMAIL_HOST_USER,
             recipient_list=[user.email],
         )
 

@@ -42,7 +42,7 @@
                     </a>
                     {% endif %}
                     {% endif %}
-                    {% if perms.schedule.can_change_newsletter_list %}
+                    {% if not user.is_staff or user.is_superuser%}
                     <a type="button" class="btn btn-sm btn-block btn-outline-primary"
                        href="{% url 'schedule:newsletter_update' news.pk %}">
                         Изменить

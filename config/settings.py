@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     "django_crontab",
     "django_extensions",
+    "phonenumber_field",
     "schedule",
     "users",
     "blog",

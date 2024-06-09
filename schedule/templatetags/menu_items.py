@@ -17,7 +17,6 @@ def get_users_menu(context):
         ]
     return {"users_menu": users_menu}
 
-
 @register.inclusion_tag("schedule/all_menus.html", takes_context=True)
 def get_menu(context):
     request = context.get("request")
@@ -37,8 +36,8 @@ def get_menu(context):
 
     if request.user.is_superuser:
         return {"all_menu": all_menu}
-    elif request.user.has_perm("schedule.change_newsletter"):
-        users_menu = [all_menu[0], all_menu[1], all_menu[2], all_menu[3], all_menu[5]]
+    elif not request.user.is_staff and not request.user.is_superuser:
+        users_menu = [all_menu[2], all_menu[3], all_menu[4], all_menu[5]]
         return {"all_menu": users_menu}
     else:
 

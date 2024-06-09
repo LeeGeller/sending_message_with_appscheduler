@@ -11,8 +11,10 @@ class ClientsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-
-        return Client.objects.filter(company=user.user_company)
+        if user.is_superuser:
+            return Client.objects.all()
+        else:
+            return Client.objects.filter(company=user.user_company)
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
@@ -45,7 +47,7 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
-        if not (user.user_company == self.get_object().company or user.is_superuser):
+        if not (user.is_staff or user.is_superuser):
             return HttpResponseForbidden("Go out!")
         else:
             return super().dispatch(request, *args, **kwargs)
@@ -59,7 +61,7 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
-        if not (user.user_company == self.get_object().company or user.is_superuser):
+        if not (user.is_staff or user.is_superuser):
             return HttpResponseForbidden("Go out!")
         else:
             return super().dispatch(request, *args, **kwargs)
